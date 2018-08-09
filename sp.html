@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snowplow example</title>
+</head>
+<body>
+<div onclick="tracker({category: 'myCategory',action: 'click',label: 'click-tracking',property: '',value: '',})">
+  ClickToTrack
+</div>
+<script type="text/javascript">
+	(function (p, l, o, w, i, n, g) {
+		if (!p[i]) {
+			p.GlobalSnowplowNamespace = p.GlobalSnowplowNamespace || [];
+			p.GlobalSnowplowNamespace.push(i);
+			p[i] = function () {
+				(p[i].q = p[i].q || []).push(arguments)
+			};
+			p[i].q = p[i].q || [];
+			n = l.createElement(o);
+			g = l.getElementsByTagName(o)[0];
+			n.async = 1;
+			n.src = w;
+			g.parentNode.insertBefore(n, g)
+		}
+
+		window.snowplow(
+			'newTracker',
+			'cf',
+			'collector', {
+				appId: 'my-site',
+				cookieDomain: 'localhost',
+				sessionCookieTimeout: 10, // 10 seconds
+				respectDoNotTrack: true,
+				userFingerprint: true,
+				contexts: {
+					webPage: true,
+					performanceTiming: true,
+				}
+			}
+		);
+
+		// window.snowplow('enableActivityTracking', 5, 5);
+		// window.snowplow('trackPageView');
+
+		// setTimeout(function () {
+		// 	console.log('start new session');
+		// 	window.snowplow('newSession');
+    // }, 20000)
+
+
+	}(window, document, "script", "//d1fc8wv8zag5ca.cloudfront.net/2.9.0/sp.js", "snowplow"));
+
+	function tracker(data) {
+		window.snowplow('trackStructEvent',
+			data.category,
+			data.action,
+			data.label,
+			data.property,
+			data.value,
+		);
+	}
+
+</script>
+</body>
+</html>
